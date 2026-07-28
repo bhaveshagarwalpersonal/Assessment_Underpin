@@ -6,6 +6,7 @@ public class FloorManager : MonoBehaviour
     [SerializeField] private List<Floor> floors = new List<Floor>();
 
     private Dictionary<int, float> floorYPositions = new Dictionary<int, float>();
+    private Dictionary<int, float> floorWaitTimes = new Dictionary<int, float>();
 
     private void Awake()
     {
@@ -13,7 +14,10 @@ public class FloorManager : MonoBehaviour
         foreach (var floor in floors)
         {
             if (!floorYPositions.ContainsKey(floor.FloorNumber))
+            {
                 floorYPositions.Add(floor.FloorNumber, floor.transform.position.y);
+                floorWaitTimes.Add(floor.FloorNumber, floor.WaitTime);
+            }
             else
                 Debug.LogWarning($"Duplicate floor number: {floor.FloorNumber}");
         }
@@ -23,6 +27,14 @@ public class FloorManager : MonoBehaviour
     {
         if (floorYPositions.TryGetValue(floorNumber, out float y))
             return y;
+        Debug.LogError($"Floor {floorNumber} not found!");
+        return 0f;
+    }
+
+    public float GetFloorWaitTime(int floorNumber)
+    {
+        if (floorWaitTimes.TryGetValue(floorNumber, out float waitTime))
+            return waitTime;
         Debug.LogError($"Floor {floorNumber} not found!");
         return 0f;
     }

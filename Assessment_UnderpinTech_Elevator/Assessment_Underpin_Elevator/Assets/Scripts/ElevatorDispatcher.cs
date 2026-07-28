@@ -6,6 +6,32 @@ public class ElevatorDispatcher : MonoBehaviour
     [SerializeField] private List<ElevatorController> elevators = new List<ElevatorController>();
     [SerializeField] private FloorManager floorManager; // optional, for distance calculation
 
+    // Raised whenever any elevator arrives at a floor - lets FloorButtons know to reset
+    public event System.Action<int> OnFloorServiced;
+
+    private void Awake()
+    {
+        foreach (var elevator in elevators)
+        {
+            if (elevator != null)
+                elevator.OnArrivedAtFloor += HandleElevatorArrived;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var elevator in elevators)
+        {
+            if (elevator != null)
+                elevator.OnArrivedAtFloor -= HandleElevatorArrived;
+        }
+    }
+
+    private void HandleElevatorArrived(int floor)
+    {
+        OnFloorServiced?.Invoke(floor);
+    }
+
     public void RegisterRequest(ElevatorRequest request)
     {
         Debug.Log("Log 1 || Request Registered");
