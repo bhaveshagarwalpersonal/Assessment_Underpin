@@ -34,6 +34,8 @@ public class ElevatorController : MonoBehaviour
     {
         if (!isMoving) return;
 
+        Debug.Log("Log 7 || Moving");
+
         // Move toward target
         Vector3 pos = transform.position;
         float newY = Mathf.MoveTowards(pos.y, targetY, speed * Time.deltaTime);
@@ -52,10 +54,13 @@ public class ElevatorController : MonoBehaviour
 
     public void AssignRequest(ElevatorRequest request)
     {
+        //Debug.Log("Log 9 || Assign Request 1");
+
         if (Queue.ContainsFloor(request.Floor))
             return;
 
         Queue.Add(request);
+        //Debug.Log("Log 9 || Assign Request 2");
 
         // If idle, start moving
         if (IsIdle())
@@ -74,6 +79,8 @@ public class ElevatorController : MonoBehaviour
     private void StartMoving()
     {
         if (Queue.Count == 0) return;
+
+        Debug.Log("Log 7 || Start Moving");
 
         // Determine initial direction toward the nearest request (or just first)
         var first = Queue.Peek();
@@ -196,7 +203,7 @@ public class ElevatorController : MonoBehaviour
         // Otherwise, it will be handled after reversal
     }
 
-    public bool IsIdle() => !isMoving && Queue.Count == 0;
+    public bool IsIdle() => !isMoving;
 
     // Optional: set floor manager reference
     public void SetFloorManager(FloorManager fm) => floorManager = fm;
